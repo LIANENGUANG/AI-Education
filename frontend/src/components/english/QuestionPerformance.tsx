@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, Table, Progress, Tag, Button, message, Typography, Space, Statistic, Row, Col } from 'antd';
 import { BarChartOutlined, FileSearchOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
+import { API_BASE_URL } from '../../config/api';
 
 const { Title, Text } = Typography;
 
@@ -36,7 +37,7 @@ const QuestionPerformance: React.FC<QuestionPerformanceProps> = ({
     try {
       setLoading(true);
       
-      const response = await fetch('http://localhost:8000/api/english/documents/analyze_question_performance/', {
+      const response = await fetch(`${API_BASE_URL}/api/english/documents/analyze_question_performance/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

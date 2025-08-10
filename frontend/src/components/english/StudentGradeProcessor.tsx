@@ -5,6 +5,7 @@ import type { UploadProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import StudentAnalysis from './StudentAnalysis';
 import QuestionPerformance from './QuestionPerformance';
+import { API_BASE_URL } from '../../config/api';
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;
@@ -57,7 +58,7 @@ const StudentGradeProcessor: React.FC<StudentGradeProcessorProps> = ({
 
       message.loading('正在解析答题卡...', 0);
 
-      const response = await fetch('http://localhost:8000/api/english/documents/grade_answer_sheet/', {
+      const response = await fetch(`${API_BASE_URL}/api/english/documents/grade_answer_sheet/`, {
         method: 'POST',
         body: formData,
       });

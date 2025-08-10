@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ai-education-backend
+    ports:
+      - "9000:8000"  # 映射到9000端口
+    volumes:
+      - ./backend/media:/app/media
+      - ./backend/db.sqlite3:/app/db.sqlite3
+      - ./data:/app/data  # 挂载测试数据目录
+    environment:
+      - DEBUG=False
+      - ALLOWED_HOSTS=81.70.221.40,localhost,127.0.0.1,backend
+      - CORS_ALLOWED_ORIGINS=http://81.70.221.40,http://81.70.221.40:9000
+    networks:
+      - ai-education-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai-education-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - ai-education-network
+    restart: unless-stopped
+
+networks:
+  ai-education-network:
+    driver: bridge
+
+volumes:
+  backend_media:
+  backend_db:

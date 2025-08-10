@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Button, Modal, Spin, message, Typography, Row, Col, Progress, Tag, List } from 'antd';
 import { UserOutlined, BarChartOutlined } from '@ant-design/icons';
+import { API_BASE_URL } from '../../config/api';
 
 const { Text, Paragraph } = Typography;
 
@@ -22,7 +23,7 @@ const StudentAnalysis: React.FC<StudentAnalysisProps> = ({
     try {
       setLoading(true);
       
-      const response = await fetch('http://localhost:8000/api/english/documents/analyze_student_performance/', {
+      const response = await fetch(`${API_BASE_URL}/api/english/documents/analyze_student_performance/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

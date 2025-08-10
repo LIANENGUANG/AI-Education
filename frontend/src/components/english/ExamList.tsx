@@ -4,6 +4,7 @@ import { EditOutlined, DeleteOutlined, EyeOutlined, UploadOutlined, FileTextOutl
 import type { UploadProps } from 'antd';
 import AnswerSummary from './AnswerSummary';
 import StudentGradeProcessor from './StudentGradeProcessor';
+import { API_BASE_URL } from '../../config/api';
 
 const { Panel } = Collapse;
 const { Title, Paragraph, Text } = Typography;
@@ -18,7 +19,7 @@ const ExamList: React.FC = () => {
   const fetchExamList = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/english/documents/');
+      const response = await fetch(`${API_BASE_URL}/api/english/documents/`);
       if (response.ok) {
         const data = await response.json();
         setExamList(data);
@@ -89,7 +90,7 @@ const ExamList: React.FC = () => {
 
       message.loading('正在上传文档...', 0);
       
-      const uploadResponse = await fetch('http://localhost:8000/api/english/documents/', {
+      const uploadResponse = await fetch(`${API_BASE_URL}/api/english/documents/`, {
         method: 'POST',
         body: formData,
       });
@@ -103,7 +104,7 @@ const ExamList: React.FC = () => {
       message.success('文档上传成功，开始分析题型...');
 
       // 第二步：分析题型
-      const analyzeResponse = await fetch(`http://localhost:8000/api/english/documents/${uploadResult.id}/analyze_types/`, {
+      const analyzeResponse = await fetch(`${API_BASE_URL}/api/english/documents/${uploadResult.id}/analyze_types/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
