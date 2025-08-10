@@ -25,10 +25,17 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     # AI EDUCATION API路由
     path('api/english/', include('english_review.urls')),
-    # 前端React应用 - 所有其他路径都指向React应用
-    re_path(r'^.*$', TemplateView.as_view(template_name='index.html'), name='frontend'),
 ]
 
-# 静态文件和媒体文件服务
+# 媒体文件服务
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# 开发环境静态文件服务 - 由Django的STATICFILES_DIRS自动处理
+if settings.DEBUG:
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+    urlpatterns += staticfiles_urlpatterns()
+
+# 前端React应用 - 所有其他路径都指向React应用（必须放在最后）
+urlpatterns += [
+    re_path(r'^.*$', TemplateView.as_view(template_name='index.html'), name='frontend'),
+]

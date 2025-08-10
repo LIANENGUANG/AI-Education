@@ -1,0 +1,17 @@
+{
+  "registry-mirrors": [
+    "https://docker.1panel.live",
+    "https://dockerpull.com",
+    "https://docker.1ms.run",
+    "https://docker.chenby.cn",
+    "https://dockerproxy.cn"
+  ],
+  "insecure-registries": [],
+  "debug": false,
+  "experimental": false,
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  }
+}

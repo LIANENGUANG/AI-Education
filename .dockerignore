@@ -27,10 +27,15 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
-# Virtual Environment
+# Virtual Environment (not needed in container)
 venv/
 ENV/
 env/
+
+# Environment files (use container environment instead)
+.env
+.env.*
+backend/.env
 
 # Node
 node_modules/
@@ -38,10 +43,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Build artifacts
+# Build artifacts that will be rebuilt in container
 frontend/build/
 backend/staticfiles/
-backend/static/
+
+# Keep backend/static/ - needed for container build
 
 # IDE
 .vscode/
@@ -62,6 +68,18 @@ Thumbs.db
 .git/
 .gitignore
 
-# Documentation
+# Development files
 *.md
 README*
+frontend/README.md
+
+# Test and development data
+data/
+
+# Development databases (container will create its own)
+# *.sqlite3
+# db.sqlite3  
+# db.sqlite3-journal
+
+# Note: SQLite files are excluded from build but will be created in container
+# and persisted via docker volumes

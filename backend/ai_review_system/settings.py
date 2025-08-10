@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-lxs#+o-3u2cspo&=vj!b$)1*wr)5&odzjn)%ma7$w63-=w#7@k')
+SECRET_KEY = 'django-insecure-lxs#+o-3u2cspo&=vj!b$)1*wr)5&odzjn)%ma7$w63-=w#7@k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
+DEBUG = False
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = ['81.70.221.40', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -59,7 +58,7 @@ ROOT_URLCONF = 'ai_review_system.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'static'],  # 添加静态文件模板目录
+        'DIRS': [BASE_DIR.parent / 'frontend' / 'build'],  # 直接指向React构建目录
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,7 +79,7 @@ WSGI_APPLICATION = 'ai_review_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db' / 'db.sqlite3',  # 匹配docker卷映射
     }
 }
 
@@ -117,14 +116,11 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# 在生产环境中，需要正确配置静态文件
+# React构建后的静态文件目录
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # React构建后的静态文件目录
+    BASE_DIR.parent / 'frontend' / 'build' / 'static',
 ]
 
 # 静态文件查找器
@@ -152,15 +148,16 @@ REST_FRAMEWORK = {
 }
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = os.environ.get(
-    'CORS_ALLOWED_ORIGINS', 
-    'http://localhost:3000,http://127.0.0.1:3000'
-).split(',')
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://81.70.221.40:9000'
+]
 
 CORS_ALLOW_CREDENTIALS = True
 
 # 百度千帆 API 配置
-QIANFAN_API_KEY = os.environ.get('QIANFAN_API_KEY', 'your-api-key-here')
+QIANFAN_API_KEY = 'bce-v3/ALTAK-3FUMugvoEVv6P8B0JLcdF/a58ec12a31ce8b42d83d0d6e4a3eef5cba630fa3'
 
 # 文件上传配置
 MEDIA_URL = '/media/'
