@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Table, Button, Space, Tag, Card, Upload, message, Collapse, Divider, Typography } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined, UploadOutlined, FileTextOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
+import AnswerSummary from './AnswerSummary';
+import StudentGradeProcessor from './StudentGradeProcessor';
 
 const { Panel } = Collapse;
 const { Title, Paragraph, Text } = Typography;
@@ -268,6 +270,12 @@ const ExamList: React.FC = () => {
             <Tag color="red">总计: {analysisResult.statistics.total_questions}道</Tag>
           </div>
           
+          {/* 答案汇总组件 */}
+          <AnswerSummary 
+            analysisData={analysisResult.structured_data}
+            documentTitle={analysisResult.document_title}
+          />
+          
           <Collapse defaultActiveKey={['1', '2', '3']} ghost>
             <Panel header="第一部分：语法选择题" key="1">
               {renderQuestionSection('语法选择题', analysisResult.structured_data.grammar_questions, '#52c41a')}
@@ -281,6 +289,12 @@ const ExamList: React.FC = () => {
           </Collapse>
         </Card>
       )}
+
+      {/* 学生答题卡批改 */}
+      <StudentGradeProcessor 
+        standardAnswers={analysisResult?.structured_data}
+        documentTitle={analysisResult?.document_title}
+      />
 
       {/* 现有试卷列表 */}
       <Card title="文档列表">
