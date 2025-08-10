@@ -31,6 +31,12 @@ local_settings.py
 db.sqlite3-journal
 media/
 
+# Django staticfiles
+backend/staticfiles/
+
+# Django static
+backend/static/
+
 # Project directories
 data/
 media/
