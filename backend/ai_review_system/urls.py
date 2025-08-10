@@ -19,6 +19,8 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.views.static import serve
+import os
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,7 +32,13 @@ urlpatterns = [
 # 媒体文件服务
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# 开发环境静态文件服务 - 由Django的STATICFILES_DIRS自动处理
+# 强制添加静态文件服务（无论DEBUG状态）
+if settings.STATICFILES_DIRS:
+    urlpatterns += [
+        re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS[0]}),
+    ]
+
+# 开发环境额外的静态文件服务
 if settings.DEBUG:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
     urlpatterns += staticfiles_urlpatterns()

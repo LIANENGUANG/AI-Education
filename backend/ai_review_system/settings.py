@@ -118,10 +118,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 
-# React构建后的静态文件目录
-STATICFILES_DIRS = [
-    BASE_DIR.parent / 'frontend' / 'build' / 'static',
-]
+# React构建后的静态文件目录 - 支持容器和本地环境
+import os
+if os.path.exists('/app/frontend/build/static'):
+    # 容器环境
+    STATICFILES_DIRS = ['/app/frontend/build/static']
+else:
+    # 本地开发环境
+    STATICFILES_DIRS = [BASE_DIR.parent / 'frontend' / 'build' / 'static']
 
 # 静态文件查找器
 STATICFILES_FINDERS = [
