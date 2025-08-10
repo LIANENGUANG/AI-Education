@@ -335,6 +335,35 @@ class StudentAnswerProcessor:
         except Exception as e:
             return {"error": f"解析失败: {str(e)}"}
     
+    def _process_ai_parse_result(self, students_list):
+        """处理AI解析结果，标准化数据格式"""
+        if not students_list:
+            return []
+        
+        standardized_students = []
+        for student in students_list:
+            if 'name' in student and 'answers' in student:
+                # 确保answers中的键是整数
+                standardized_answers = {}
+                for q_num, answer in student['answers'].items():
+                    try:
+                        standardized_answers[int(q_num)] = answer
+                    except (ValueError, TypeError):
+                        continue
+                
+                standardized_student = {
+                    "name": student['name'],
+                    "answers": standardized_answers,
+                    "total_answered": len(standardized_answers)
+                }
+                standardized_students.append(standardized_student)
+        
+        print(f"最终标准化结果: 识别到 {len(standardized_students)} 名学生")
+        for i, student in enumerate(standardized_students[:5]):  # 显示前5个学生
+            print(f"  {i+1}. {student['name']}: 答题{student['total_answered']}题")
+        
+        return standardized_students
+    
     def _ai_parse_answer_content(self, content):
         """使用AI解析答题卡内容"""
         # 限制内容长度，避免超时
