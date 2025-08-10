@@ -37,14 +37,18 @@ env/
 .env.*
 backend/.env
 
-# Node
+# Node - 排除前端源码和依赖
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+frontend/src/
+frontend/public/
+frontend/package*.json
+frontend/tsconfig.json
+frontend/README.md
 
 # Build artifacts that will be rebuilt in container
-frontend/build/
 backend/staticfiles/
 
 # Keep backend/static/ - needed for container build
