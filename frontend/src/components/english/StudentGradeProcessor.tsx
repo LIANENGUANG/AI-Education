@@ -4,6 +4,7 @@ import { UploadOutlined, FileSearchOutlined, CheckCircleOutlined, CloseCircleOut
 import type { UploadProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import StudentAnalysis from './StudentAnalysis';
+import QuestionPerformance from './QuestionPerformance';
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;
@@ -164,6 +165,21 @@ const StudentGradeProcessor: React.FC<StudentGradeProcessorProps> = ({
         );
       },
     },
+    {
+      title: '操作',
+      key: 'action',
+      width: 100,
+      render: (record: StudentResult) => (
+        <Button
+          type="link"
+          size="small"
+          icon={<UserOutlined />}
+          onClick={() => setSelectedStudent(record)}
+        >
+          AI分析
+        </Button>
+      ),
+    },
   ];
 
   const renderScoreDistribution = () => {
@@ -289,6 +305,12 @@ const StudentGradeProcessor: React.FC<StudentGradeProcessorProps> = ({
             {renderDistributionChart()}
           </div>
 
+          {/* 题目分析 */}
+          <QuestionPerformance 
+            gradeResults={gradeResults}
+            isVisible={true}
+          />
+
           {/* 详细成绩表 */}
           <Collapse defaultActiveKey={['students']} ghost>
             <Panel header={`学生成绩详情 (${gradeResults.length}人)`} key="students">
@@ -314,6 +336,15 @@ const StudentGradeProcessor: React.FC<StudentGradeProcessorProps> = ({
             </Upload>
           </div>
         </>
+      )}
+
+      {/* 学生分析弹窗 */}
+      {selectedStudent && (
+        <StudentAnalysis
+          student={selectedStudent}
+          standardAnswers={standardAnswers}
+          onClose={() => setSelectedStudent(null)}
+        />
       )}
     </Card>
   );

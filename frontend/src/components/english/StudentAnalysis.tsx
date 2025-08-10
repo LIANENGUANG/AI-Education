@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Card, Button, Modal, Spin, message, Typography, Row, Col, Progress, Tag, List } from 'antd';
 import { UserOutlined, BarChartOutlined } from '@ant-design/icons';
-import axios from 'axios';
 
-const { Title, Text, Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 interface StudentAnalysisProps {
   student: any;
@@ -23,16 +22,28 @@ const StudentAnalysis: React.FC<StudentAnalysisProps> = ({
     try {
       setLoading(true);
       
-      const response = await axios.post('/api/english/documents/analyze_student_performance/', {
-        student_data: student,
-        standard_answers: standardAnswers
+      const response = await fetch('http://localhost:8000/api/english/documents/analyze_student_performance/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          student_data: student,
+          standard_answers: standardAnswers
+        })
       });
       
-      setAnalysisResult(response.data);
+      if (!response.ok) {
+        throw new Error('分析请求失败');
+      }
+      
+      const data = await response.json();
+      
+      setAnalysisResult(data);
       message.success('学生分析完成');
       
     } catch (error: any) {
-      message.error('分析失败: ' + (error.response?.data?.error || error.message));
+      message.error('分析失败: ' + (error.message || '未知错误'));
     } finally {
       setLoading(false);
     }
@@ -178,7 +189,7 @@ const StudentAnalysis: React.FC<StudentAnalysisProps> = ({
               </Card>
 
               {/* 改进建议 */}
-              <Card title="改进建议" size="small">
+              <Card title="改进建议" size="small" style={{ marginBottom: 16 }}>
                 {analysisResult.improvement_suggestions?.length > 0 ? (
                   <List
                     size="small"
@@ -193,6 +204,21 @@ const StudentAnalysis: React.FC<StudentAnalysisProps> = ({
                   <Text type="secondary">继续保持当前学习状态</Text>
                 )}
               </Card>
+
+              {/* 错误模式 */}
+              {analysisResult.error_patterns && analysisResult.error_patterns.length > 0 && (
+                <Card title="错误模式分析" size="small">
+                  <List
+                    size="small"
+                    dataSource={analysisResult.error_patterns}
+                    renderItem={(item: string, index: number) => (
+                      <List.Item>
+                        <Tag color="orange">{index + 1}. {item}</Tag>
+                      </List.Item>
+                    )}
+                  />
+                </Card>
+              )}
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '40px 0' }}>
