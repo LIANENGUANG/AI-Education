@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Card, Upload, Button, message, Table, Tag, Statistic, Row, Col, Progress, Collapse, Space, Typography } from 'antd';
-import { UploadOutlined, FileSearchOutlined, CheckCircleOutlined, CloseCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { UploadOutlined, FileSearchOutlined, CheckCircleOutlined, CloseCircleOutlined, MinusCircleOutlined, UserOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import StudentAnalysis from './StudentAnalysis';
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;
@@ -39,6 +40,7 @@ const StudentGradeProcessor: React.FC<StudentGradeProcessorProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [gradeResults, setGradeResults] = useState<StudentResult[]>([]);
   const [statistics, setStatistics] = useState<GradeStatistics | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<StudentResult | null>(null);
 
   const handleAnswerSheetUpload = async (file: File) => {
     if (!standardAnswers) {

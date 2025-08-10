@@ -146,8 +146,9 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-# SiliconFlow API 配置
-SILICONFLOW_API_KEY = 'sk-mieecleccyyuwjyebilldgabdgjweeuftccgymavvbrnthev'
+# 百度千帆 API 配置
+QIANFAN_API_KEY = 'bce-v3/ALTAK-3FUMugvoEVv6P8B0JLcdF/a58ec12a31ce8b42d83d0d6e4a3eef5cba630fa3'
+QIANFAN_SECRET_KEY = 'your-secret-key-if-needed'
 
 # 文件上传配置
 MEDIA_URL = '/media/'

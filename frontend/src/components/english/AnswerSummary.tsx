@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card, Row, Col, Tag, Typography, Space, Divider } from 'antd';
+import { Card, Row, Col, Tag, Typography, Space } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 interface Question {
   question_number: number;

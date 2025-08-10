@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Space, Tag, Card, Upload, message, Collapse, Divider, Typography } from 'antd';
+import { Table, Button, Space, Tag, Card, Upload, message, Collapse, Typography } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined, UploadOutlined, FileTextOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import AnswerSummary from './AnswerSummary';
