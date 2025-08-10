@@ -19,8 +19,8 @@ RUN apt-get update && \
 # 复制Python依赖文件
 COPY backend/requirements.txt ./backend/
 
-# 使用清华源安装Python依赖
-RUN pip install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple/ --trusted-host pypi.tuna.tsinghua.edu.cn -r backend/requirements.txt
+# 使用官方PyPI源安装Python依赖
+RUN pip install --no-cache-dir -r backend/requirements.txt
 
 # 复制整个项目结构
 COPY backend/ ./backend/
