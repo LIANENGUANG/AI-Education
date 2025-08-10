@@ -574,10 +574,9 @@ class StudentAnswerProcessor:
                             "status": "wrong"
                         }
                 
-                # 计算分数（每题2分，满分100分，43题实际满分86分）
-                total_questions = len(correct_answers)
-                points_per_question = 100 / total_questions if total_questions > 0 else 0
-                student_result["score"] = round(student_result["correct_count"] * points_per_question, 1)
+                # 计算分数 - 根据题型分配不同分值
+                score = self._calculate_weighted_score(student_result, correct_answers, standard_answers)
+                student_result["score"] = round(score, 1)
                 
                 graded_results.append(student_result)
             
@@ -593,6 +592,67 @@ class StudentAnswerProcessor:
             
         except Exception as e:
             return {"error": f"批改失败: {str(e)}"}
+    
+    def _calculate_weighted_score(self, student_result, correct_answers, standard_answers):
+        """根据题型计算加权分数，总分固定100分"""
+        try:
+            # 题型权重配置
+            QUESTION_TYPE_WEIGHTS = {
+                'grammar': 1.0,      # 语法题：权重1.0
+                'reading': 1.5,      # 阅读题：权重1.5 (更重要)
+                'language_use': 1.2  # 语言运用题：权重1.2
+            }
+            
+            total_weighted_score = 0
+            max_weighted_score = 0
+            
+            # 构建题型映射
+            question_type_map = {}
+            
+            # 语法题
+            if 'grammar_questions' in standard_answers:
+                for q in standard_answers['grammar_questions']:
+                    question_type_map[str(q['question_number'])] = 'grammar'
+            
+            # 阅读题
+            if 'reading_questions' in standard_answers:
+                for passage in standard_answers['reading_questions']:
+                    for q in passage.get('questions', []):
+                        question_type_map[str(q['question_number'])] = 'reading'
+            
+            # 语言运用题
+            if 'language_use_questions' in standard_answers:
+                for passage in standard_answers['language_use_questions']:
+                    for q in passage.get('questions', []):
+                        question_type_map[str(q['question_number'])] = 'language_use'
+            
+            # 计算加权分数
+            for question_num in correct_answers.keys():
+                question_type = question_type_map.get(str(question_num), 'grammar')  # 默认语法题
+                weight = QUESTION_TYPE_WEIGHTS[question_type]
+                max_weighted_score += weight
+                
+                # 检查学生是否答对
+                if question_num in student_result["details"]:
+                    detail = student_result["details"][question_num]
+                    if detail.get("status") == "correct":
+                        total_weighted_score += weight
+            
+            # 换算到100分制
+            if max_weighted_score > 0:
+                final_score = (total_weighted_score / max_weighted_score) * 100
+            else:
+                final_score = 0
+                
+            print(f"分数计算 - 学生: {student_result['name']}, 加权分: {total_weighted_score:.1f}/{max_weighted_score:.1f}, 百分制: {final_score:.1f}")
+            return final_score
+            
+        except Exception as e:
+            print(f"分数计算失败: {e}")
+            # 回退到简单计分
+            total_questions = len(correct_answers)
+            points_per_question = 100 / total_questions if total_questions > 0 else 0
+            return student_result["correct_count"] * points_per_question
     
     def _extract_standard_answers(self, analysis_result):
         """从AI分析结果中提取标准答案"""
